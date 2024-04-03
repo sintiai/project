@@ -1,6 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
-
+#url
 def scrape_billboard_artist_100(url):
     response = requests.get(url)
     if response.status_code == 200:
@@ -12,7 +12,7 @@ def scrape_billboard_artist_100(url):
     else:
         print('Failed to retrieve data from the website')
         return None
-
+#api 
 def query_seatgeek_api(artists):
     for rank, artist in artists:
         query = artist.replace(" ", "-")
