@@ -180,6 +180,6 @@ for movie in first_five_movies:
     print(f"Genre: {movie[4]}")
     print("\n")
 
-print("adding this to make a commit")
+
 conn.close()
 
