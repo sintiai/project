@@ -172,7 +172,7 @@ def create_database():
     conn.commit()
     conn.close()
 
-# Print the details of the first 5 movies
+# Print the details of the first 5 movies just for funzies
 for movie in first_five_movies:
     print(f"Title: {movie[1]}")
     print(f"Year: {movie[2]}")
@@ -180,6 +180,6 @@ for movie in first_five_movies:
     print(f"Genre: {movie[4]}")
     print("\n")
 
-# Close the connection to the database
+print("adding this to make a commit")
 conn.close()
 
