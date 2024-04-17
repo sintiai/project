@@ -54,7 +54,7 @@ def store_data(artist_list):
     
     for artist in artist_list:
         #Insert or ignore each artist into the artist table
-        c.execute("INSERT OR IGNORE INTO Artist (artist_name) VALUES (?)", (artist,))
+        c.execute("INSERT OR IGNORE INTO Artists (artist_name) VALUES (?)", (artist,))
         tracks = get_top_tracks(artist)
         for track in tracks:
             song_name = track[0]
@@ -62,6 +62,7 @@ def store_data(artist_list):
             # Find the ID associated with the artist (SELECT statement into artist table)
 
             artist_id = c.execute("SELECT artist_id FROM Artists WHERE artist_name = ? ", (artist,)) 
+            artist_id = c.fetchone()[0]
                                   # Figure out how to store the value here
 
             print("This is track ",track)
