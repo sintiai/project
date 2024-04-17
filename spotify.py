@@ -29,7 +29,7 @@ def create_database():
                  artist_id INTEGER PRIMARY KEY,
                  artist_name TEXT,
                  UNIQUE(artist_id, artist_name))''')   
-    c.execute('''CREATE TABLE IF NOT EXISTS tracks (
+    c.execute('''CREATE TABLE IF NOT EXISTS TopTracks (
                  track_id INTEGER PRIMARY KEY,
                  track_name TEXT,
                  artist_id INTEGER,
@@ -53,10 +53,21 @@ def store_data(artist_list):
     c = conn.cursor()
     
     for artist in artist_list:
+        #Insert or ignore each artist into the artist table
+        c.execute("INSERT OR IGNORE INTO Artist (artist_name) VALUES (?)", (artist,))
         tracks = get_top_tracks(artist)
         for track in tracks:
+            song_name = track[0]
+            popularity = track [1]
+            # Find the ID associated with the artist (SELECT statement into artist table)
+
+            artist_id = c.execute("SELECT artist_id FROM Artists WHERE artist_name = ? ", (artist,)) 
+                                  # Figure out how to store the value here
+
+            print("This is track ",track)
+            print("by ", artist)
             try:
-                c.execute("INSERT INTO TopTracks (artist_name, track_name) VALUES (?, ?)", track)
+                 c.execute("INSERT INTO TopTracks (artist_id, track_name, popularity ) VALUES (?, ?,? )", (artist_id,song_name,popularity))
             except sqlite3.IntegrityError:
                 pass
     
@@ -64,10 +75,10 @@ def store_data(artist_list):
     conn.close()
 
 
+
 def main():
     create_database()
-
-            # Retrieve top tracks and their popularity for each artist
+ # Retrieve top tracks and their popularity for each artist
     for artist in artist_list:
         print(f"Top tracks for {artist}:")
         tracks = get_top_tracks(artist)
