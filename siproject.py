@@ -121,11 +121,12 @@ movies = ["Barbie",
 
 # API key
 api_key = "524429c9"  # Remember to replace this with your actual API key
-
+counter = 0
 # Iterate through the list of movies
 for movie in movies:
+    if counter >= 25: 
     # Replace spaces with %20 for URL encoding
-    encoded_title = "+".join(movie.split())
+        encoded_title = "+".join(movie.split())
     
     # Construct the API URL
     api_url = f"http://www.omdbapi.com/?t={encoded_title}&apikey=524429c9"
@@ -147,15 +148,12 @@ for movie in movies:
         # Insert data into the database, ignoring duplicates
         c.execute('''INSERT OR IGNORE INTO movies (title, year, imdb_rating, genre) 
                      VALUES (?, ?, ?, ?)''', (title, year, imdb_rating, genre))
+         counter += 1
     else:
         print(f"Failed to retrieve data for {movie}")
 
     # Commit the changes to the database
     conn.commit()
-
-# Fetch the first 5 movies from the database
-c.execute("SELECT * FROM movies LIMIT 5")
-first_five_movies = c.fetchall()
 
 
 def create_database():
@@ -180,7 +178,6 @@ for movie in first_five_movies:
     print(f"Genre: {movie[4]}")
     print("\n")
 
-
 conn.close()
 
-#his is for a test
+#his is for a testgit 
