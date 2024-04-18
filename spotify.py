@@ -55,20 +55,17 @@ def store_data(artist_list):
     for artist in artist_list:
         #Insert or ignore each artist into the artist table
         c.execute("INSERT OR IGNORE INTO Artists (artist_name) VALUES (?)", (artist,))
+        c.execute("SELECT COUNT(*) FROM TopTracks WHERE artist_id = (SELECT artist_id FROM Artists WHERE artist_name = ?)", (artist,))
+        track_count = c.fetchone()[0]
         tracks = get_top_tracks(artist)
         for track in tracks:
-
-            print(track_count)
             if track_count >= 25:  # Limit to 25 tracks per artist
                 break
             song_name = track[0]
             popularity = track [1]
             # Find the ID associated with the artist (SELECT statement into artist table)
-
             artist_id = c.execute("SELECT artist_id FROM Artists WHERE artist_name = ? ", (artist,)) 
             artist_id = c.fetchone()[0]
-                                  # Figure out how to store the value here
-
             print("This is track ",track)
             print("by ", artist)
             try:
@@ -100,3 +97,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+#adding this to create a commit 
