@@ -1,4 +1,5 @@
 import sqlite3
+import csv
 
 def calculate_average_imdb_rating():
     conn = sqlite3.connect('combined.db')
@@ -19,22 +20,34 @@ def calculate_average_popularity_by_artist():
 def write_to_file(data, filename):
     with open(filename, 'w') as file:
         for item in data:
-            file.write(f"{item[0]}: {item[1]:.2f}\n")
+            file.write(f"{item}\n")
 
 def main():
     # average IMDb rating
     average_imdb_rating = calculate_average_imdb_rating()
-    print(f"Average IMDb Rating: {average_imdb_rating:.2f}")
+    print(average_imdb_rating)
+    #print(f"Average IMDb Rating: {average_imdb_rating:.2f}")
 
-    #  average popularity by artist
+    # average popularity by artist
     average_popularity_by_artist = calculate_average_popularity_by_artist()
-    print("\nAverage Popularity by Artist:")
-    for artist, average_popularity in average_popularity_by_artist:
-        print(f"{artist}: {average_popularity:.2f}")
+    print(average_popularity_by_artist)
+    with open('spotify_calculations.csv', 'w', newline='') as file:
+        writer = csv.writer(file)
+        title = ('Artist Name', 'Average Rating')
+        writer.writerow(title)
+        for row in average_popularity_by_artist:
+            writer.writerow(row)
+    
+    # Write data to text files dynamically
+    #write_to_file([(f"Average IMDb Rating: {average_imdb_rating:.2f}")], 'average_imdb_rating.txt')
+    #write_to_file([(f"{artist}: {average_popularity:.2f}") for artist, average_popularity in average_popularity_by_artist], 'average_popularity_by_artist.txt')
 
-    # Write data to text files
-    write_to_file([(f"Average IMDb Rating", average_imdb_rating)], 'average_imdb_rating.txt')
-    write_to_file(average_popularity_by_artist, 'average_popularity_by_artist.txt')
+    with open('imdb_calculations.csv', 'w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(('Description', 'Average Rating'))
+        writer.writerow(('Avergage IMDB Rating', average_imdb_rating))
 
 if __name__ == "__main__":
     main()
+
+    
