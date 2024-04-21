@@ -120,7 +120,7 @@ movies = ["Barbie",
           " Devdas "]
 
 # API key
-api_key = "524429c9"  # Remember to replace this with your actual API key
+api_key = "524429c9"  
 counter = 0
 # Iterate through the list of movies
 for movie in movies:
