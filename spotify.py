@@ -37,12 +37,13 @@ def create_database():
    c.execute('''CREATE TABLE IF NOT EXISTS Artists (
                 artist_id INTEGER PRIMARY KEY,
                 artist_name TEXT,
-                UNIQUE(artist_id, artist_name))''')  
+                UNIQUE(artist_name))''')  
    c.execute('''CREATE TABLE IF NOT EXISTS TopTracks (
                 track_id INTEGER PRIMARY KEY,
                 track_name TEXT,
                 artist_id INTEGER,
-                popularity INTEGER
+                popularity INTEGER,
+                UNIQUE(track_name)
 
 
    )''')
@@ -61,7 +62,7 @@ def store_data(artist_list):
     full_path = os.path.join(base_path, 'combined.db')
     conn = sqlite3.connect(full_path)
     c = conn.cursor()
-    
+    count_by_num = 0
     track_count=0
     for artist in artist_list:
         #Insert or ignore each artist into the artist table
@@ -70,16 +71,18 @@ def store_data(artist_list):
         track_count = c.fetchone()[0]
         tracks = get_top_tracks(artist)
         for track in tracks:
-            if track_count >= 25:  # Limit to 25 tracks per artist
-                break
+            if track_count >= 10 or count_by_num == 25:  
+                continue
             song_name = track[0]
             popularity = track [1]
             # Find the ID associated with the artist (SELECT statement into artist table)
             artist_id = c.execute("SELECT artist_id FROM Artists WHERE artist_name = ? ", (artist,)) 
-            artist_id = c.fetchone()
+            artist_id = c.fetchone()[0]
             try:
                  c.execute("INSERT INTO TopTracks (artist_id, track_name, popularity ) VALUES (?, ?,? )", (artist_id,song_name,popularity))
                  track_count += 1
+                 count_by_num += 1
+
             except sqlite3.IntegrityError:
                 pass
     
