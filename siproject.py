@@ -1,11 +1,10 @@
 import requests
 import sqlite3
-<<<<<<< HEAD
 import os
 import matplotlib.pyplot as plt
 import pandas as pd
 import csv
-=======
+
    
 # Create or connect to the SQLite database
 conn = sqlite3.connect('combined.db')
@@ -160,7 +159,7 @@ for movie in movies:
 
     # Commit the changes to the database
     conn.commit()
->>>>>>> 244e5f1ead650a0269cf2956e508b30242d348ad
+
 
 
 def create_database():
