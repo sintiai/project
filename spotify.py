@@ -53,41 +53,38 @@ def create_database():
 
 
 def store_data(artist_list):
-   client_id = "8c279de418d9430296bbb01fbabd6dd6"
-   client_secret = "2d383ce0756348e5b96748c6d64aa270"
-   client_credentials_manager = SpotifyClientCredentials(client_id=client_id, client_secret=client_secret)
-   sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
-  
-  
-   base_path = os.path.abspath(os.path.dirname(__file__))
-   full_path = os.path.join(base_path, 'combined.db')
-   conn = sqlite3.connect(full_path)
-   c = conn.cursor()
-   track_count=0
-   for artist in artist_list:
-       #Insert or ignore each artist into the artist table
-       c.execute("INSERT OR IGNORE INTO Artists (artist_name) VALUES (?)", (artist,))
-       c.execute("SELECT COUNT(*) FROM TopTracks WHERE artist_id = (SELECT artist_id FROM Artists WHERE artist_name = ?)", (artist,))
-       track_count = c.fetchone()[0]
-       tracks = get_top_tracks(artist)
-       for track in tracks:
-           if track_count >= 25:  # Limit to 25 tracks per artist
-               break
-           song_name = track[0]
-           popularity = track [1]
-           # Find the ID associated with the artist (SELECT statement into artist table)
-           artist_id = c.execute("SELECT artist_id FROM Artists WHERE artist_name = ? ", (artist,))
-           artist_id = c.fetchone()[0]
-           print("This is track ",track)
-           print("by ", artist)
-           try:
-                c.execute("INSERT INTO TopTracks (artist_id, track_name, popularity ) VALUES (?, ?,? )", (artist_id,song_name,popularity))
-                track_count += 1
-           except sqlite3.IntegrityError:
-               pass
-  
-   conn.commit()
-   conn.close()
+    client_id = "8c279de418d9430296bbb01fbabd6dd6"
+    client_secret = "2d383ce0756348e5b96748c6d64aa270"
+    client_credentials_manager = SpotifyClientCredentials(client_id=client_id, client_secret=client_secret)
+    sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
+    base_path = os.path.abspath(os.path.dirname(__file__))
+    full_path = os.path.join(base_path, 'combined.db')
+    conn = sqlite3.connect(full_path)
+    c = conn.cursor()
+    
+    track_count=0
+    for artist in artist_list:
+        #Insert or ignore each artist into the artist table
+        c.execute("INSERT OR IGNORE INTO Artists (artist_name) VALUES (?)", (artist,))
+        c.execute("SELECT COUNT(*) FROM TopTracks WHERE artist_id = (SELECT artist_id FROM Artists WHERE artist_name = ?)", (artist,))
+        track_count = c.fetchone()[0]
+        tracks = get_top_tracks(artist)
+        for track in tracks:
+            if track_count >= 25:  # Limit to 25 tracks per artist
+                break
+            song_name = track[0]
+            popularity = track [1]
+            # Find the ID associated with the artist (SELECT statement into artist table)
+            artist_id = c.execute("SELECT artist_id FROM Artists WHERE artist_name = ? ", (artist,)) 
+            artist_id = c.fetchone()
+            try:
+                 c.execute("INSERT INTO TopTracks (artist_id, track_name, popularity ) VALUES (?, ?,? )", (artist_id,song_name,popularity))
+                 track_count += 1
+            except sqlite3.IntegrityError:
+                pass
+    
+    conn.commit()
+    conn.close()
 def calculate_average_popularity_by_artist():
    conn = sqlite3.connect('combined.db')
    c = conn.cursor()
