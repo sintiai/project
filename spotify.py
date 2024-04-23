@@ -2,6 +2,8 @@ import sqlite3
 import spotipy
 import os
 from spotipy.oauth2 import SpotifyClientCredentials
+import matplotlib.pyplot as plt
+import pandas as pd 
 
 
 client_id = "8c279de418d9430296bbb01fbabd6dd6"
@@ -78,8 +80,23 @@ def store_data(artist_list):
     
     conn.commit()
     conn.close()
+def calculate_average_popularity_by_artist():
+    conn = sqlite3.connect('combined.db')
+    c = conn.cursor()
+    c.execute("SELECT Artists.artist_name, AVG(TopTracks.popularity) FROM TopTracks JOIN Artists ON TopTracks.artist_id = Artists.artist_id GROUP BY Artists.artist_name")
+    average_popularity_by_artist = c.fetchall()
+    conn.close()
+    return average_popularity_by_artist
 
+def write_to_file(data, filename):
+    with open(filename, 'w') as file:
+        for item in data:
+            file.write(f"{item}\n") 
 
+def graph_spotify():
+    df = pd.read_csv('spotify_calculations.csv')
+    df.plot.bar(x='Artist Name', y='Average Rating', color='pink')
+    plt.show() 
 
 def main():
     create_database()
