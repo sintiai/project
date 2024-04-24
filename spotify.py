@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 
-
+#got client credentials
 
 client_id = "8c279de418d9430296bbb01fbabd6dd6"
 client_secret = "2d383ce0756348e5b96748c6d64aa270"
@@ -14,7 +14,7 @@ client_credentials_manager = SpotifyClientCredentials(client_id = client_id, cli
 sp = spotipy.Spotify(client_credentials_manager = client_credentials_manager) #uses personal key to give data
 artist_list = ["Taylor Swift", "Adele", "Drake", "Bad Bunny", "Doja Cat", "Bruno Mars", "Dolly Parton", "Sabrina Carpenter", "Lady Gaga", "Ariana Grande"]
 
-
+#retrieving tracks with api
 def get_top_tracks(artist_name):
    result = sp.search(artist_name, type='artist')
    if len(result['artists']['items']) > 0:
@@ -28,7 +28,7 @@ def get_top_tracks(artist_name):
 
 
 
-
+#creating tables
 def create_database():
    base_path = os.path.abspath(os.path.dirname(__file__))
    full_path = os.path.join(base_path, 'combined.db')
@@ -51,7 +51,7 @@ def create_database():
    conn.close()
 
 
-
+#Placing things into table
 
 def store_data(artist_list):
     client_id = "8c279de418d9430296bbb01fbabd6dd6"
@@ -71,7 +71,7 @@ def store_data(artist_list):
         track_count = c.fetchone()[0]
         tracks = get_top_tracks(artist)
         for track in tracks:
-            if track_count >= 10 or count_by_num == 25:  
+            if track_count >= 10 or count_by_num == 25:  #10 tracks for each artists and stopping at 25 rows
                 continue
             song_name = track[0]
             popularity = track [1]
@@ -88,6 +88,7 @@ def store_data(artist_list):
     
     conn.commit()
     conn.close()
+    #calculating avg popularity
 def calculate_average_popularity_by_artist():
    conn = sqlite3.connect('combined.db')
    c = conn.cursor()
@@ -102,40 +103,7 @@ def write_to_file(data, filename):
        for item in data:
            file.write(f"{item}\n")
     
-#     client_id = "8c279de418d9430296bbb01fbabd6dd6"
-# client_secret = "2d383ce0756348e5b96748c6d64aa270"
-# client_credentials_manager = SpotifyClientCredentials(client_id=client_id, client_secret=client_secret)
-# sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
-# base_path = os.path.abspath(os.path.dirname(__file__))
-# full_path = os.path.join(base_path, 'combined.db')
-# conn = sqlite3.connect(full_path)
-    
-# def create_artist_table():
-#     c = conn.cursor()
-#     track_count=0
-#     for artist in artist_list:
-#             #Insert or ignore each artist into the artist table
-#             c.execute("INSERT OR IGNORE INTO Artists (artist_name) VALUES (?)", (artist,))
-#             c.execute("SELECT COUNT(*) FROM TopTracks WHERE artist_id = (SELECT artist_id FROM Artists WHERE artist_name = ?)", (artist,))
-#             track_count = c.fetchone()[0]
-#             tracks = get_top_tracks(artist)
-#             for track in tracks:
-#                 if track_count >= 25:  # Limit to 25 tracks per artist
-#                     break
-#                 song_name = track[0]
-#                 popularity = track [1]
-#                 # Find the ID associated with the artist (SELECT statement into artist table)
-#                 artist_id = c.execute("SELECT artist_id FROM Artists WHERE artist_name = ? ", (artist,)) 
-#                 artist_id = c.fetchone()[0]
-#                 try:
-#                     c.execute("INSERT INTO TopTracks (artist_id, track_name, popularity ) VALUES (?, ?,? )", (artist_id,song_name,popularity))
-#                     track_count += 1
-#                 except sqlite3.IntegrityError:
-#                     pass
-        
-#     conn.commit()
-#     conn.close()
-    
+  #writing file  
 def graph_spotify():
    df = pd.read_csv('spotify_calculations.csv')
    df.plot.bar(x='Artist Name', y='Average Rating', color='pink')
