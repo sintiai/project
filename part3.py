@@ -1,6 +1,6 @@
 import sqlite3
 import csv
-
+#calculations
 def calculate_average_imdb_rating():
     conn = sqlite3.connect('combined.db')
     c = conn.cursor()
@@ -67,7 +67,7 @@ def main():
         writer.writerow(('Genre', 'Average Rating'))
         for row in average_rating_by_genre:
             writer.writerow(row)
-
+    #movie count by genre
     movie_count_by_genre = calculate_movie_count_by_genre()
     print("Movie Count by Genre:")
     for genre, count in movie_count_by_genre:
