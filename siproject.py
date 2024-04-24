@@ -122,42 +122,6 @@ movies = ["Barbie",
           " My Name Is Khan ", 
           " Devdas "]
 
-# # API key
-# api_key = "524429c9"  
-# counter = 0
-# # Iterate through the list of movies
-# for movie in movies:
-#     if counter >= 25:
-#         break
-#     # Replace spaces with %20 for URL encoding
-#     encoded_title = "+".join(movie.split())
-    
-#     # Construct the API URL
-#     api_url = f"http://www.omdbapi.com/?t={encoded_title}&apikey=524429c9"
-    
-#     # Send a GET request to the API
-#     response = requests.get(api_url)
-    
-#     # Parse the JSON response
-#     data = response.json()
-    
-#     # Check if data is retrieved successfully
-#     if data.get('Response') == 'True':
-#         # Extract relevant information
-#         title = data.get('Title')
-#         year = data.get('Year')
-#         imdb_rating = data.get('imdbRating')
-#         genre = data.get('Genre')
-        
-#         # Insert data into the database, ignoring duplicates
-#         c.execute('''INSERT OR IGNORE INTO movies (title, year, imdb_rating, genre) 
-#                      VALUES (?, ?, ?, ?)''', (title, year, imdb_rating, genre))
-#     else:
-#         print(f"Failed to retrieve data for {movie}")
-
-#     # Commit the changes to the database
-#     conn.commit()
-
 
 
 def create_database():
