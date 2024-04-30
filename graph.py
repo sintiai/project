@@ -5,12 +5,14 @@ import pandas as pd
 def graph_spotify():
     df = pd.read_csv('spotify_calculations.csv')
     df.plot.bar(x='Artist Name', y='Average Rating', color='pink')
+    plt.title("Average Artist Popularity")
     plt.show()
 
 #graph for calculate_average_imdb_rating
 def graph_imdb():
     df = pd.read_csv('imdb_calculations.csv')
     df.plot.bar(x='Description', y='Average Rating', color='pink')
+    plt.title("Average IMBD Rating")
     plt.show()
 #graph for calculate_movie_count_by_genre
 def genre_imdb():
