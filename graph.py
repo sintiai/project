@@ -5,6 +5,7 @@ import pandas as pd
 def graph_spotify():
     df = pd.read_csv('spotify_calculations.csv')
     df.plot.bar(x='Artist Name', y='Average Rating', color='pink')
+    plt.ylabel('Average Popularity')
     plt.title("Average Artist Popularity")
     plt.show()
 
